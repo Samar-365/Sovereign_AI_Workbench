@@ -1,0 +1,248 @@
+"use client";
+
+import React, { useRef, useEffect } from "react";
+import {
+  FileScan,
+  Activity,
+  Award,
+  Sparkles,
+  ShieldCheck,
+  Cpu,
+  Layers,
+} from "lucide-react";
+import { useTaskStore } from "@/store/useTaskStore";
+import { MessageBubble } from "./MessageBubble";
+import { Composer } from "./Composer";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { AttachedFile } from "@/types/chat";
+import { simulateAgentTraceStream } from "@/lib/sse";
+import { mockCorrosionDegradationCurve } from "@/mocks/mockInspectionData";
+import { mockPumpVibrationFFTSpectrum } from "@/mocks/mockVibrationData";
+
+export function ChatContainer() {
+  const {
+    messages,
+    addMessage,
+    updateMessage,
+    isExecuting,
+    setExecuting,
+    setTraceStepStatus,
+    addTraceStepLog,
+    resetTraceSteps,
+    setApprovalModalOpen,
+    setActiveTaskId,
+  } = useTaskStore();
+
+  const streamAbortRef = useRef<{ abort: () => void } | null>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll on new message / streaming token
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = (prompt: string, attachments: AttachedFile[]) => {
+    if (isExecuting) return;
+
+    // 1. Add user message
+    const userMsgId = addMessage({
+      role: "user",
+      content: prompt,
+      attachments,
+    });
+
+    // 2. Add assistant placeholder message
+    const asstMsgId = addMessage({
+      role: "assistant",
+      content: "",
+      isStreaming: true,
+      reasoningSteps: [],
+    });
+
+    // 3. Reset and start agent trace
+    resetTraceSteps();
+    setExecuting(true);
+
+    const isVibrationQuery =
+      prompt.toLowerCase().includes("vibration") ||
+      prompt.toLowerCase().includes("fft") ||
+      prompt.toLowerCase().includes("bearing");
+
+    // 4. Launch SSE trace simulation
+    let currentAssistantText = "";
+
+    const stream = simulateAgentTraceStream(prompt, {
+      onStepStart: (stepId, node) => {
+        setTraceStepStatus(stepId, "running");
+      },
+      onStepLog: (stepId, log) => {
+        addTraceStepLog(stepId, log);
+      },
+      onStepComplete: (stepId, durationMs, summary) => {
+        setTraceStepStatus(stepId, "completed", summary, durationMs);
+      },
+      onTokenStream: (token) => {
+        currentAssistantText += token;
+        updateMessage(asstMsgId, {
+          content: currentAssistantText,
+          isStreaming: true,
+          chartData: isVibrationQuery
+            ? {
+                type: "vibration_fft",
+                title: "P-102B Crude Charge Pump FFT Vibration Spectrum",
+                description:
+                  "Spectral analysis highlighting BPFO outer race defect spike at 148.5 Hz (5.12 mm/s).",
+                data: mockPumpVibrationFFTSpectrum,
+                threshold: 2.8,
+              }
+            : {
+                type: "corrosion_curve",
+                title: "CML-HC-101A Wall Thickness Degradation Curve vs MAWT Limit",
+                description:
+                  "Historical UT measurements projecting MAWT limit breach (6.5 mm) by Q4 2027.",
+                data: mockCorrosionDegradationCurve,
+                threshold: 6.5,
+              },
+          reasoningSteps: [
+            "1. Multimodal OCR: Extracted 4 Condition Monitoring Location coordinates.",
+            "2. Vector Grounding: Queried local ChromaDB for API 570 / OISD-105 standards.",
+            "3. Mathematical Model: Computed long-term corrosion rate 0.82 mm/yr.",
+            "4. Safety Policy: Flagged remaining life < 2 years for mandatory engineer review.",
+          ],
+        });
+      },
+      onRequiresApproval: (approvalData) => {
+        updateMessage(asstMsgId, {
+          isStreaming: false,
+          requiresApproval: true,
+          approvalStatus: "pending",
+        });
+        setTraceStepStatus(
+          "step-4",
+          "waiting_approval",
+          "Awaiting Lead Corrosion Specialist digital PIN sign-off"
+        );
+        useTaskStore.setState({
+          activeApprovalData: approvalData,
+          isApprovalModalOpen: true,
+        });
+      },
+      onTaskComplete: () => {
+        setExecuting(false);
+      },
+      onError: (err) => {
+        console.error("Trace error", err);
+        setExecuting(false);
+      },
+    });
+
+    streamAbortRef.current = stream;
+  };
+
+  const quickPresets = [
+    {
+      title: "Hydrocracker UT Audit",
+      description: "Extract CML wall thickness, calculate corrosion rates (mm/yr) & API 570 MAWT limit.",
+      prompt:
+        "Analyze the uploaded ultrasonic thickness inspection log for Hydrocracker Unit 3. Extract the nominal vs measured wall thickness at all Condition Monitoring Locations (CMLs), compute short-term and long-term corrosion rates, project remaining life, and check compliance against API 570 minimum retirement thickness (MAWT = 6.5 mm).",
+      file: {
+        id: "att-preset-1",
+        name: "hydrocracker_ut_log.pdf",
+        size: 2450000,
+        type: "application/pdf",
+      },
+      icon: FileScan,
+    },
+    {
+      title: "Pump Vibration FFT Anomaly",
+      description: "Analyze crude charge pump FFT spectrum for bearing wear and unbalance spikes.",
+      prompt:
+        "Evaluate pump P-102B FFT vibration spectrum for bearing wear, unbalance, and misalignment frequencies against ISO 10816 vibration severity limits.",
+      file: {
+        id: "att-preset-2",
+        name: "vibration_fft_sample.json",
+        size: 480000,
+        type: "application/json",
+      },
+      icon: Activity,
+    },
+    {
+      title: "OISD-105 Work Permit Check",
+      description: "Verify confined space hot work permit against statutory OISD checklists.",
+      prompt:
+        "Verify the current hot work & confined space work permit against OISD-STD-105 standard operating checklists for atmospheric testing, blind isolation, and fire watch compliance.",
+      icon: Award,
+    },
+  ];
+
+  return (
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-canvas relative">
+      {/* Scrollable Conversation Canvas */}
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {messages.length === 0 ? (
+            /* Blank / Welcome Screen */
+            <div className="py-12 text-center select-none animate-in fade-in duration-300">
+              <div className="w-14 h-14 rounded-2xl bg-surface-card border border-border-medium flex items-center justify-center mx-auto mb-5 shadow-floating">
+                <Sparkles className="w-7 h-7 text-accent-safety" />
+              </div>
+              <h2 className="text-2xl font-bold text-primary">
+                Sovereign Operator Workspace
+              </h2>
+              <p className="mt-2 text-sm text-primary-secondary max-w-lg mx-auto">
+                Air-gapped intelligence enclave with deterministic LangGraph reasoning, local vector RAG, and Human-in-the-Loop verification.
+              </p>
+
+              {/* Quick Launch Presets */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 text-left">
+                {quickPresets.map((preset, idx) => {
+                  const Icon = preset.icon;
+                  return (
+                    <Card
+                      key={idx}
+                      variant="interactive"
+                      onClick={() =>
+                        handleSendMessage(
+                          preset.prompt,
+                          preset.file ? [preset.file] : []
+                        )
+                      }
+                      className="p-4 flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="w-8 h-8 rounded-lg bg-accent-safety/10 border border-accent-safety/25 flex items-center justify-center text-accent-safety mb-3">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <h4 className="text-xs font-bold text-primary mb-1">
+                          {preset.title}
+                        </h4>
+                        <p className="text-[11px] text-primary-secondary leading-relaxed">
+                          {preset.description}
+                        </p>
+                      </div>
+                      <div className="mt-3 pt-2 border-t border-border-subtle flex items-center justify-between text-[10px] font-mono text-accent-safety">
+                        <span>Click to Execute</span>
+                        <span>➔</span>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* Message Stream */
+            messages.map((msg) => <MessageBubble key={msg.id} message={msg} />)
+          )}
+
+          <div ref={bottomRef} />
+        </div>
+      </div>
+
+      {/* Floating Elevated Composer */}
+      <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-canvas via-canvas/90 to-transparent pt-4">
+        <Composer onSendMessage={handleSendMessage} />
+      </div>
+    </div>
+  );
+}
