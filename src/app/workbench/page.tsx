@@ -4,7 +4,6 @@ import React from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useTaskStore } from "@/store/useTaskStore";
 import { ChatContainer } from "@/components/chat/ChatContainer";
-import { DocumentRepository } from "@/components/knowledge/DocumentRepository";
 import { AuditTrailView } from "@/components/audit/AuditTrailView";
 import { NetworkSentinelView } from "@/components/security/NetworkSentinelView";
 import { ApprovalCheckpoint } from "@/components/approval/ApprovalCheckpoint";
@@ -22,8 +21,6 @@ export default function WorkbenchPage() {
     switch (activeView) {
       case "tasks":
         return <ChatContainer />;
-      case "knowledge":
-        return <DocumentRepository />;
       case "audit":
         return <AuditTrailView />;
       case "network":

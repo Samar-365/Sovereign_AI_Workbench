@@ -4,7 +4,6 @@ import React, { useEffect } from "react";
 import {
   Plus,
   MessageSquare,
-  Database,
   FileCheck,
   ShieldCheck,
   Pin,
@@ -15,6 +14,21 @@ import {
 } from "lucide-react";
 import { useTaskStore, WorkspaceView } from "@/store/useTaskStore";
 import { Badge } from "@/components/ui/Badge";
+
+function formatTaskTime(dateStr?: string): string {
+  if (!dateStr) return "Just now";
+  if (dateStr.endsWith("UTC") && dateStr.length <= 10) return dateStr;
+  if (dateStr.includes(" ")) {
+    const parts = dateStr.split(" ");
+    if (parts[1] && parts[1].includes(":")) {
+      return `${parts[1].slice(0, 5)} UTC`;
+    }
+  }
+  if (dateStr.includes("T")) {
+    return `${dateStr.slice(11, 16)} UTC`;
+  }
+  return dateStr;
+}
 
 export function Sidebar() {
   const {
@@ -33,23 +47,26 @@ export function Sidebar() {
     setModelModalOpen,
   } = useTaskStore();
 
-  // Keyboard shortcut: Ctrl + B / Cmd + B to toggle sidebar
+  // Keyboard shortcut: Ctrl + B to toggle sidebar, Ctrl + N for new chat
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
         e.preventDefault();
         toggleSidebar();
       }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
+        e.preventDefault();
+        createNewTask();
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggleSidebar]);
+  }, [toggleSidebar, createNewTask]);
 
   if (!isSidebarOpen) return null;
 
   const navItems: { view: WorkspaceView; label: string; icon: any; badge?: string }[] = [
     { view: "tasks", label: "Tasks", icon: MessageSquare },
-    { view: "knowledge", label: "Knowledge Base", icon: Database },
     { view: "audit", label: "Audit Trail", icon: FileCheck },
     { view: "network", label: "Network", icon: ShieldCheck },
   ];
@@ -63,18 +80,33 @@ export function Sidebar() {
           <button
             onClick={toggleSidebar}
             className="p-1.5 rounded-lg text-primary-muted hover:text-primary hover:bg-surface-hover transition-colors"
-            title="Close sidebar"
+            title="Close sidebar (Ctrl+B)"
           >
             <PanelLeftClose className="w-4 h-4" />
           </button>
           <button
             onClick={createNewTask}
             className="p-1.5 rounded-lg text-primary-muted hover:text-primary hover:bg-surface-hover transition-colors"
-            title="New task"
+            title="New chat (Ctrl+N)"
           >
             <Plus className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Prominent New Chat Action */}
+        <button
+          onClick={createNewTask}
+          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-[13px] bg-accent/10 hover:bg-accent/15 text-accent border border-accent/20 transition-all font-medium group shadow-xs cursor-pointer"
+          title="Start a new chat (Ctrl+N)"
+        >
+          <div className="flex items-center gap-2">
+            <Plus className="w-4 h-4 transition-transform group-hover:rotate-90 duration-200" />
+            <span>New Chat</span>
+          </div>
+          <span className="text-[10px] text-accent/80 font-mono bg-accent/10 px-1.5 py-0.5 rounded border border-accent/20">
+            Ctrl+N
+          </span>
+        </button>
 
         {/* View Navigation */}
         <div className="space-y-0.5">
@@ -112,6 +144,14 @@ export function Sidebar() {
           <span className="text-[11px] font-medium uppercase tracking-wider text-primary-muted">
             Recent
           </span>
+          <button
+            onClick={createNewTask}
+            className="text-[11px] text-primary-muted hover:text-accent flex items-center gap-1 transition-colors px-1 py-0.5 rounded hover:bg-surface-hover cursor-pointer"
+            title="Create new chat"
+          >
+            <Plus className="w-3 h-3" />
+            <span>New</span>
+          </button>
         </div>
 
         <div className="space-y-0.5">
@@ -124,10 +164,10 @@ export function Sidebar() {
                   setActiveTaskId(task.id);
                   setActiveView("tasks");
                 }}
-                className={`group relative px-3 py-2 rounded-xl text-left cursor-pointer transition-all ${
+                className={`group relative p-3 rounded-xl text-left cursor-pointer transition-all border ${
                   isSelected
-                    ? "bg-surface-hover text-primary"
-                    : "text-primary-secondary hover:bg-surface-hover/60"
+                    ? "bg-surface-card border-border-medium/80 text-primary shadow-sm"
+                    : "bg-surface-card/40 border-border-subtle/30 text-primary-secondary hover:bg-surface-hover/80 hover:border-border-subtle"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -135,6 +175,7 @@ export function Sidebar() {
                     className={`text-[13px] truncate ${
                       isSelected ? "text-primary font-medium" : "text-primary-secondary"
                     }`}
+                    title={task.title}
                   >
                     {task.title}
                   </span>
@@ -144,12 +185,14 @@ export function Sidebar() {
                 </div>
 
                 <div className="flex items-center justify-between mt-1 text-[10px] text-primary-muted">
-                  <span>{task.updatedAt.slice(11, 16)} UTC</span>
+                  <span>{formatTaskTime(task.updatedAt)}</span>
                   <Badge size="sm" variant={
                     task.status === "COMPLETED"
                       ? "success"
                       : task.status === "AWAITING_APPROVAL"
                       ? "warning"
+                      : task.status === "RUNNING"
+                      ? "accent"
                       : "default"
                   }>
                     {task.status}

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TaskItem, AuditLogEntry, OperatorRole } from "@/types/task";
+import { TaskItem, AuditLogEntry, OperatorRole, TaskStatus } from "@/types/task";
 import { Message, ModelGenerationConfig } from "@/types/chat";
 import { AgentTraceStep, AgentNodeName, AgentNodeStatus } from "@/types/agent";
 import { KnowledgeDocument } from "@/types/file";
@@ -9,7 +9,7 @@ import { initialMockAuditLogs } from "@/mocks/mockAuditLogs";
 import { mockCorrosionDegradationCurve } from "@/mocks/mockInspectionData";
 import { generateSHA256 } from "@/lib/crypto";
 
-export type WorkspaceView = "tasks" | "knowledge" | "audit" | "network";
+export type WorkspaceView = "tasks" | "audit" | "network";
 
 interface TaskState {
   // Navigation & Shell
@@ -302,35 +302,92 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   tasks: [initialTask],
   activeTaskId: "TASK-DEMO-01",
   setActiveTaskId: (id) => {
-    const task = get().tasks.find((t) => t.id === id);
-    if (task) {
+    const state = get();
+    if (state.activeTaskId === id) return;
+
+    // Save previous active task state
+    const updatedTasks = state.tasks.map((t) => {
+      if (t.id === state.activeTaskId) {
+        return {
+          ...t,
+          messages: state.messages,
+          traceSteps: state.activeTraceSteps,
+        };
+      }
+      return t;
+    });
+
+    const target = updatedTasks.find((t) => t.id === id);
+    if (target) {
       set({
+        tasks: updatedTasks,
         activeTaskId: id,
-        messages: task.messages,
-        activeTraceSteps: task.traceSteps,
+        messages: target.messages || [],
+        activeTraceSteps: target.traceSteps || defaultExecutionSteps,
         isExecuting: false,
         currentRunningNode: null,
+        isApprovalModalOpen: false,
+        activeApprovalData: null,
+        activeView: "tasks",
       });
     } else {
       set({
+        tasks: updatedTasks,
         activeTaskId: null,
         messages: [],
         activeTraceSteps: defaultExecutionSteps,
         isExecuting: false,
         currentRunningNode: null,
+        isApprovalModalOpen: false,
+        activeApprovalData: null,
+        activeView: "tasks",
       });
     }
   },
 
   createNewTask: () => {
-    set({
-      activeTaskId: null,
+    const state = get();
+
+    // Preserve previous active task
+    const updatedTasks = state.tasks.map((t) => {
+      if (t.id === state.activeTaskId) {
+        return {
+          ...t,
+          messages: state.messages,
+          traceSteps: state.activeTraceSteps,
+        };
+      }
+      return t;
+    });
+
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0, 10);
+    const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+    const fullDate = `${dateStr} ${timeStr}:00 UTC`;
+    const newId = `TASK-${Date.now().toString().slice(-6)}`;
+
+    const newTask: TaskItem = {
+      id: newId,
+      title: "New Chat",
+      category: "CUSTOM",
+      status: "DRAFT",
+      createdAt: fullDate,
+      updatedAt: fullDate,
+      summary: "Fresh sovereign inspection session.",
       messages: [],
-      activeTraceSteps: defaultExecutionSteps.map((s) => ({
+      traceSteps: defaultExecutionSteps.map((s) => ({
         ...s,
         status: "pending",
         logs: [],
       })),
+      pinned: false,
+    };
+
+    set({
+      tasks: [newTask, ...updatedTasks],
+      activeTaskId: newId,
+      messages: [],
+      activeTraceSteps: newTask.traceSteps,
       isExecuting: false,
       currentRunningNode: null,
       isApprovalModalOpen: false,
@@ -339,11 +396,23 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     });
   },
 
-  deleteTask: (id) =>
-    set((state) => ({
-      tasks: state.tasks.filter((t) => t.id !== id),
-      ...(state.activeTaskId === id ? { activeTaskId: null, messages: [] } : {}),
-    })),
+  deleteTask: (id) => {
+    const state = get();
+    const remainingTasks = state.tasks.filter((t) => t.id !== id);
+    if (state.activeTaskId === id) {
+      const nextTask = remainingTasks[0] || null;
+      set({
+        tasks: remainingTasks,
+        activeTaskId: nextTask ? nextTask.id : null,
+        messages: nextTask ? nextTask.messages : [],
+        activeTraceSteps: nextTask ? nextTask.traceSteps : defaultExecutionSteps,
+        isExecuting: false,
+        currentRunningNode: null,
+      });
+    } else {
+      set({ tasks: remainingTasks });
+    }
+  },
 
   pinTask: (id) =>
     set((state) => ({
@@ -418,7 +487,22 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       };
     }
 
+    const updatedTasks = state.tasks.map((t) => {
+      if (t.id === state.activeTaskId) {
+        return {
+          ...t,
+          status: "COMPLETED" as TaskStatus,
+          messages: updatedMessages,
+          traceSteps: updatedSteps,
+          deliverableUrl: "#",
+          deliverableHash: hash,
+        };
+      }
+      return t;
+    });
+
     set({
+      tasks: updatedTasks,
       activeTraceSteps: updatedSteps,
       messages: updatedMessages,
       isExecuting: false,
@@ -450,7 +534,19 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         : step
     );
 
+    const updatedTasks = state.tasks.map((t) => {
+      if (t.id === state.activeTaskId) {
+        return {
+          ...t,
+          status: "REJECTED" as TaskStatus,
+          traceSteps: updatedSteps,
+        };
+      }
+      return t;
+    });
+
     set({
+      tasks: updatedTasks,
       activeTraceSteps: updatedSteps,
       isExecuting: false,
       currentRunningNode: null,
@@ -513,28 +609,96 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 
   // Actions
   addMessage: (message) => {
-    const id = `msg-${Date.now()}`;
+    const id = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const timestamp = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
     });
     const newMsg: Message = { id, timestamp, ...message };
-    set((state) => ({
-      messages: [...state.messages, newMsg],
-    }));
+
+    set((state) => {
+      const newMessages = [...state.messages, newMsg];
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10);
+      const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+      const updatedAt = `${dateStr} ${timeStr}:00 UTC`;
+
+      let activeId = state.activeTaskId;
+      let currentTasks = [...state.tasks];
+
+      if (!activeId || !currentTasks.some((t) => t.id === activeId)) {
+        activeId = `TASK-${Date.now().toString().slice(-6)}`;
+        const newTask: TaskItem = {
+          id: activeId,
+          title:
+            message.role === "user" && message.content.trim()
+              ? message.content.trim().slice(0, 36) + (message.content.trim().length > 36 ? "..." : "")
+              : "New Chat",
+          category: "CUSTOM",
+          status: "RUNNING",
+          createdAt: updatedAt,
+          updatedAt,
+          summary: message.content.slice(0, 80),
+          messages: newMessages,
+          traceSteps: state.activeTraceSteps,
+          pinned: false,
+        };
+        currentTasks = [newTask, ...currentTasks];
+      } else {
+        currentTasks = currentTasks.map((t) => {
+          if (t.id === activeId) {
+            const isInitialTitle = !t.title || t.title === "New Chat" || t.title === "New Inspection Chat";
+            const newTitle =
+              message.role === "user" && isInitialTitle && message.content.trim()
+                ? message.content.trim().slice(0, 36) + (message.content.trim().length > 36 ? "..." : "")
+                : t.title;
+
+            return {
+              ...t,
+              title: newTitle,
+              updatedAt,
+              status: (t.status === "DRAFT" ? "RUNNING" : t.status) as TaskStatus,
+              messages: newMessages,
+            };
+          }
+          return t;
+        });
+      }
+
+      return {
+        activeTaskId: activeId,
+        messages: newMessages,
+        tasks: currentTasks,
+      };
+    });
     return id;
   },
 
   updateMessage: (id, updates) => {
-    set((state) => ({
-      messages: state.messages.map((m) => (m.id === id ? { ...m, ...updates } : m)),
-    }));
+    set((state) => {
+      const updatedMessages = state.messages.map((m) => (m.id === id ? { ...m, ...updates } : m));
+      const updatedTasks = state.tasks.map((t) => {
+        if (t.id === state.activeTaskId) {
+          return {
+            ...t,
+            messages: updatedMessages,
+            ...(updates.requiresApproval ? { status: "AWAITING_APPROVAL" as TaskStatus } : {}),
+          };
+        }
+        return t;
+      });
+
+      return {
+        messages: updatedMessages,
+        tasks: updatedTasks,
+      };
+    });
   },
 
   setTraceStepStatus: (stepId, status, summary, durationMs) => {
-    set((state) => ({
-      activeTraceSteps: state.activeTraceSteps.map((s) =>
+    set((state) => {
+      const updatedSteps = state.activeTraceSteps.map((s) =>
         s.id === stepId
           ? {
               ...s,
@@ -543,27 +707,93 @@ export const useTaskStore = create<TaskState>((set, get) => ({
               ...(durationMs ? { durationMs } : {}),
             }
           : s
-      ),
-    }));
-  },
+      );
 
-  addTraceStepLog: (stepId, log) => {
-    set((state) => ({
-      activeTraceSteps: state.activeTraceSteps.map((s) =>
-        s.id === stepId ? { ...s, logs: [...s.logs, log] } : s
-      ),
-    }));
-  },
+      const updatedTasks = state.tasks.map((t) => {
+        if (t.id === state.activeTaskId) {
+          return {
+            ...t,
+            traceSteps: updatedSteps,
+          };
+        }
+        return t;
+      });
 
-  resetTraceSteps: () => {
-    set({
-      activeTraceSteps: defaultExecutionSteps.map((s) => ({
-        ...s,
-        status: "pending",
-        logs: [],
-      })),
+      return {
+        activeTraceSteps: updatedSteps,
+        tasks: updatedTasks,
+      };
     });
   },
 
-  setExecuting: (executing) => set({ isExecuting: executing }),
+  addTraceStepLog: (stepId, log) => {
+    set((state) => {
+      const updatedSteps = state.activeTraceSteps.map((s) =>
+        s.id === stepId ? { ...s, logs: [...s.logs, log] } : s
+      );
+
+      const updatedTasks = state.tasks.map((t) => {
+        if (t.id === state.activeTaskId) {
+          return {
+            ...t,
+            traceSteps: updatedSteps,
+          };
+        }
+        return t;
+      });
+
+      return {
+        activeTraceSteps: updatedSteps,
+        tasks: updatedTasks,
+      };
+    });
+  },
+
+  resetTraceSteps: () => {
+    const freshSteps = defaultExecutionSteps.map((s) => ({
+      ...s,
+      status: "pending" as AgentNodeStatus,
+      logs: [],
+    }));
+
+    set((state) => {
+      const updatedTasks = state.tasks.map((t) => {
+        if (t.id === state.activeTaskId) {
+          return {
+            ...t,
+            traceSteps: freshSteps,
+          };
+        }
+        return t;
+      });
+
+      return {
+        activeTraceSteps: freshSteps,
+        tasks: updatedTasks,
+      };
+    });
+  },
+
+  setExecuting: (executing) => {
+    set((state) => {
+      let updatedTasks = state.tasks;
+      if (!executing && state.activeTaskId) {
+        updatedTasks = state.tasks.map((t) => {
+          if (t.id === state.activeTaskId && t.status !== "AWAITING_APPROVAL" && t.status !== "REJECTED") {
+            return {
+              ...t,
+              status: "COMPLETED" as TaskStatus,
+              messages: state.messages,
+              traceSteps: state.activeTraceSteps,
+            };
+          }
+          return t;
+        });
+      }
+      return {
+        isExecuting: executing,
+        tasks: updatedTasks,
+      };
+    });
+  },
 }));
