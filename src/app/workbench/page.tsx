@@ -1,0 +1,46 @@
+"use client";
+
+import React from "react";
+import { AppShell } from "@/components/layout/AppShell";
+import { useTaskStore } from "@/store/useTaskStore";
+import { ChatContainer } from "@/components/chat/ChatContainer";
+import { DocumentRepository } from "@/components/knowledge/DocumentRepository";
+import { AuditTrailView } from "@/components/audit/AuditTrailView";
+import { NetworkSentinelView } from "@/components/security/NetworkSentinelView";
+import { ApprovalCheckpoint } from "@/components/approval/ApprovalCheckpoint";
+import { ModelConfigModal } from "@/components/chat/ModelConfigModal";
+import { ArenaComparisonView } from "@/components/chat/ArenaComparisonView";
+
+export default function WorkbenchPage() {
+  const { activeView, modelConfig } = useTaskStore();
+
+  const renderActiveView = () => {
+    if (modelConfig.isArenaMode && activeView === "tasks") {
+      return <ArenaComparisonView />;
+    }
+
+    switch (activeView) {
+      case "tasks":
+        return <ChatContainer />;
+      case "knowledge":
+        return <DocumentRepository />;
+      case "audit":
+        return <AuditTrailView />;
+      case "network":
+        return <NetworkSentinelView />;
+      default:
+        return <ChatContainer />;
+    }
+  };
+
+  return (
+    <AppShell>
+      {/* Active Main View */}
+      {renderActiveView()}
+
+      {/* Global Enclave Modals & HITL Gates */}
+      <ApprovalCheckpoint />
+      <ModelConfigModal />
+    </AppShell>
+  );
+}
