@@ -97,7 +97,7 @@ export function FeatureBentoGrid() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-accent-safety/10 border border-accent-safety/25 flex items-center justify-center text-accent-safety">
+                    <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/25 flex items-center justify-center text-accent">
                       <Icon className="w-5 h-5" />
                     </div>
                     <Badge variant={item.badgeVariant}>{item.badge}</Badge>

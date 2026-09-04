@@ -124,7 +124,7 @@ export function ApprovalCheckpoint() {
             </span>
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="text-[11px] text-accent-safety hover:text-accent-hover font-mono flex items-center gap-1"
+              className="text-[11px] text-accent hover:text-accent-hover font-mono flex items-center gap-1"
             >
               <Edit3 className="w-3 h-3" />
               <span>{isEditing ? "Lock Text" : "Edit Recommendation"}</span>
@@ -149,7 +149,7 @@ export function ApprovalCheckpoint() {
         <div className="p-4 rounded-xl bg-surface border border-border-medium space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-border-subtle">
             <div className="flex items-center gap-2">
-              <UserCheck className="w-4 h-4 text-accent-safety" />
+              <UserCheck className="w-4 h-4 text-accent" />
               <span className="text-xs font-semibold text-primary">
                 Operator Sign-off Credentials
               </span>
@@ -211,7 +211,7 @@ export function ApprovalCheckpoint() {
               onClick={handleApprove}
               isLoading={isSigning}
               size="sm"
-              className="bg-accent-safety hover:bg-accent-hover text-white font-bold gap-2 shadow-glow text-xs px-5"
+              className="bg-accent hover:bg-accent-hover text-white font-bold gap-2 shadow-glow text-xs px-5"
             >
               <FileCheck className="w-4 h-4" />
               <span>Approve & Sign Deliverable</span>

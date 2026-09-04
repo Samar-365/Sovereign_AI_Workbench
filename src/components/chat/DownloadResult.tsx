@@ -47,7 +47,7 @@ export function DownloadResult({
       </div>
 
       <div className="flex items-start gap-3.5">
-        <div className="w-11 h-11 rounded-xl bg-accent-safety/15 border border-accent-safety/30 flex items-center justify-center text-accent-safety shrink-0">
+        <div className="w-11 h-11 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center text-accent shrink-0">
           <FileCheck className="w-6 h-6" />
         </div>
         <div className="flex-1 min-w-0">
@@ -66,7 +66,7 @@ export function DownloadResult({
           <span>SHA-256 Cryptographic Stamp</span>
           <button
             onClick={handleCopy}
-            className="hover:text-accent-safety flex items-center gap-1"
+            className="hover:text-accent flex items-center gap-1"
           >
             {copied ? (
               <>
@@ -81,7 +81,7 @@ export function DownloadResult({
             )}
           </button>
         </div>
-        <div className="text-[11px] font-mono text-accent-safety break-all">
+        <div className="text-[11px] font-mono text-accent break-all">
           {sha256}
         </div>
       </div>

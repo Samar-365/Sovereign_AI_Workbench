@@ -33,7 +33,7 @@ export function CorrosionChart({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 mb-3 border-b border-border-subtle">
         <div>
           <div className="flex items-center gap-2">
-            <TrendingDown className="w-4 h-4 text-accent-safety" />
+            <TrendingDown className="w-4 h-4 text-accent" />
             <h4 className="text-xs sm:text-sm font-bold text-primary font-mono">
               {title}
             </h4>

@@ -9,8 +9,8 @@ export function LandingFooter() {
     <footer className="border-t border-border-medium bg-surface/60 pt-16 pb-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Pitch CTA Banner */}
-        <div className="rounded-2xl bg-gradient-to-br from-surface-card to-surface-raised border border-accent-safety/30 p-8 sm:p-10 mb-16 text-center shadow-glow">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-safety/15 border border-accent-safety/30 text-accent-safety text-xs font-mono mb-4">
+        <div className="rounded-2xl bg-gradient-to-br from-surface-card to-surface-raised border border-accent/30 p-8 sm:p-10 mb-16 text-center shadow-glow">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/15 border border-accent/30 text-accent text-xs font-mono mb-4">
             <ShieldCheck className="w-4 h-4" />
             SMART INDIA HACKATHON 2026 — PS ID 26117
           </div>
@@ -34,7 +34,7 @@ export function LandingFooter() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-border-subtle">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-surface border border-border-medium flex items-center justify-center">
-              <span className="text-accent-safety font-bold text-sm">OA</span>
+              <span className="text-accent font-bold text-sm">OA</span>
             </div>
             <div>
               <div className="text-sm font-bold text-primary">OnPremisAI Sovereign Workbench</div>
@@ -43,16 +43,16 @@ export function LandingFooter() {
           </div>
 
           <div className="flex items-center gap-6 text-xs text-primary-secondary font-mono">
-            <Link href="/workbench" className="hover:text-accent-safety transition-colors">
+            <Link href="/workbench" className="hover:text-accent transition-colors">
               Workbench Shell
             </Link>
-            <a href="#pipeline" className="hover:text-accent-safety transition-colors">
+            <a href="#pipeline" className="hover:text-accent transition-colors">
               LangGraph Pipeline
             </a>
-            <a href="#threat-matrix" className="hover:text-accent-safety transition-colors">
+            <a href="#threat-matrix" className="hover:text-accent transition-colors">
               Threat Matrix
             </a>
-            <a href="#compliance" className="hover:text-accent-safety transition-colors">
+            <a href="#compliance" className="hover:text-accent transition-colors">
               OISD Compliance
             </a>
           </div>

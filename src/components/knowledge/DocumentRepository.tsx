@@ -65,12 +65,12 @@ export function DocumentRepository() {
   };
 
   return (
-    <div className="flex-1 h-full overflow-y-auto p-6 max-w-5xl mx-auto space-y-6">
+    <div className="w-full flex-1 h-full min-h-0 overflow-y-auto p-6 max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-subtle">
         <div>
           <div className="flex items-center gap-2">
-            <Database className="w-5 h-5 text-accent-safety" />
+            <Database className="w-5 h-5 text-accent" />
             <h2 className="text-xl font-bold text-primary">
               Confidential RAG Vector Repository
             </h2>
@@ -125,7 +125,7 @@ export function DocumentRepository() {
           <Card key={doc.id} className="p-4 bg-surface-card border-border-medium shadow-card space-y-3">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-start gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-lg bg-accent-safety/10 border border-accent-safety/25 flex items-center justify-center text-accent-safety shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/25 flex items-center justify-center text-accent shrink-0 mt-0.5">
                   <FileText className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">

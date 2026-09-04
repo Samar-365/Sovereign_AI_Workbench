@@ -53,20 +53,20 @@ export function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Dialog */}
       <div
         className={cn(
-          "relative w-full z-10 bg-surface-card border border-border-medium rounded-2xl shadow-floating overflow-hidden animate-in fade-in zoom-in-95 duration-150",
+          "relative w-full z-10 bg-surface-card border border-border-subtle rounded-3xl shadow-floating overflow-hidden animate-in fade-in zoom-in-95 duration-150",
           maxWidths[maxWidth],
           className
         )}
       >
         {(title || description) && (
-          <div className="flex items-start justify-between p-5 border-b border-border-subtle bg-surface/50">
+          <div className="flex items-start justify-between p-5 border-b border-border-subtle">
             <div>
               {title && (
                 <h3 className="text-lg font-semibold text-primary">{title}</h3>

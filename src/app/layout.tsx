@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "OnPremisAI — Sovereign AI Workbench for Confidential Industrial Intelligence",
   description:
-    "Air-gapped agentic orchestration engineered for oil refineries, petrochemical complexes, and high-hazard continuous manufacturing. Zero external packets, local CUDA acceleration, and deterministic HITL validation.",
+    "Air-gapped agentic orchestration engineered for oil refineries, petrochemical complexes, and high-hazard continuous manufacturing.",
   icons: {
     icon: "/brand/logo-sovereign.svg",
   },
@@ -17,7 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-canvas text-primary antialiased min-h-screen selection:bg-accent-safety/25 selection:text-white">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-canvas text-primary antialiased min-h-screen">
         {children}
       </body>
     </html>

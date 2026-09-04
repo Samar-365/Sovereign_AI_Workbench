@@ -49,17 +49,17 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       }`}
     >
       {/* Message Header */}
-      <div className="flex items-center gap-2 px-1 text-xs text-primary-muted font-mono">
+      <div className="flex items-center gap-2 px-1 text-xs text-primary-muted">
         <div className="flex items-center gap-1.5">
           {isUser ? (
             <>
               <User className="w-3.5 h-3.5 text-primary-secondary" />
-              <span className="font-semibold text-primary-secondary">Operator</span>
+              <span className="font-medium text-primary-secondary">Operator</span>
             </>
           ) : (
             <>
-              <Sparkles className="w-3.5 h-3.5 text-accent-safety" />
-              <span className="font-semibold text-accent-safety">
+              <Sparkles className="w-3.5 h-3.5 text-accent" />
+              <span className="font-medium text-accent">
                 OnPremisAI Enclave
               </span>
             </>
@@ -71,10 +71,10 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
       {/* Message Box */}
       <div
-        className={`rounded-2xl p-5 w-full transition-all ${
+        className={`rounded-2xl w-full transition-all ${
           isUser
-            ? "bg-surface-card border border-border-medium max-w-3xl"
-            : "bg-surface/50 border border-border-subtle"
+            ? "bg-surface-card/80 border border-border-subtle p-5 max-w-3xl"
+            : "p-5"
         }`}
       >
         {/* User Attached File Chips */}
@@ -85,7 +85,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 key={file.id}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border-medium text-xs font-mono text-primary"
               >
-                <FileText className="w-4 h-4 text-accent-safety" />
+                <FileText className="w-4 h-4 text-accent" />
                 <span className="font-medium">{file.name}</span>
                 <span className="text-[10px] text-primary-muted">
                   ({formatBytes(file.size)})
@@ -103,7 +103,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
               className="w-full px-3 py-2 text-xs font-mono flex items-center justify-between text-primary-secondary hover:text-primary hover:bg-surface-hover transition-colors"
             >
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-accent-safety" />
+                <ShieldCheck className="w-3.5 h-3.5 text-accent" />
                 <span>Chain of Thought Reasoning Trace ({message.reasoningSteps.length} Steps)</span>
               </div>
               {showReasoning ? (
@@ -117,7 +117,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
               <div className="p-3 bg-canvas/60 border-t border-border-subtle space-y-1.5 text-xs font-mono text-primary-secondary">
                 {message.reasoningSteps.map((step, idx) => (
                   <div key={idx} className="flex items-start gap-2">
-                    <span className="text-accent-safety">❯</span>
+                    <span className="text-accent">❯</span>
                     <span>{step}</span>
                   </div>
                 ))}
@@ -127,7 +127,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         )}
 
         {/* Message Content Markdown */}
-        <div className="prose-custom max-w-none">
+        <div className="prose-claude max-w-none">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {message.content}
           </ReactMarkdown>
@@ -154,26 +154,26 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
         {/* Human-in-the-Loop Required Banner */}
         {message.requiresApproval && message.approvalStatus === "pending" && (
-          <div className="mt-5 p-4 rounded-xl bg-status-warning/10 border border-status-warning/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-pulse-glow">
+          <div className="mt-5 p-4 rounded-xl bg-status-warning/8 border border-status-warning/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-status-warning/20 border border-status-warning/40 flex items-center justify-center text-status-warning shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-status-warning/15 border border-status-warning/30 flex items-center justify-center text-status-warning shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-status-warning">
-                  HUMAN VERIFICATION REQUIRED: Safety Critical Inspection
+                <h4 className="text-xs sm:text-sm font-semibold text-status-warning">
+                  Human Verification Required
                 </h4>
                 <p className="text-[11px] text-primary-secondary mt-0.5">
-                  Remaining life &lt; 2 years. Deterministic gate suspended pending operator digital sign-off.
+                  Remaining life &lt; 2 years. Awaiting operator digital sign-off.
                 </p>
               </div>
             </div>
             <Button
               onClick={() => setApprovalModalOpen(true)}
-              className="bg-status-warning text-black hover:bg-yellow-400 font-bold shrink-0 text-xs px-4"
+              className="shrink-0 text-xs px-4"
               size="sm"
             >
-              REVIEW & SIGN CHECKPOINT
+              Review & Sign
             </Button>
           </div>
         )}
@@ -209,7 +209,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         {message.deliverable && (
           <div className="mt-4 p-4 rounded-xl bg-surface-card border border-border-medium flex items-center justify-between gap-4 shadow-card">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-accent-safety/15 border border-accent-safety/30 flex items-center justify-center text-accent-safety shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center text-accent shrink-0">
                 <FileCheck className="w-5 h-5" />
               </div>
               <div>

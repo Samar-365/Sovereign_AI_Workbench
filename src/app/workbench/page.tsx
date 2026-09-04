@@ -35,8 +35,10 @@ export default function WorkbenchPage() {
 
   return (
     <AppShell>
-      {/* Active Main View */}
-      {renderActiveView()}
+      {/* Active Main View - Screen Fit Container */}
+      <div className="flex-1 w-full h-full min-h-0 flex flex-col overflow-hidden">
+        {renderActiveView()}
+      </div>
 
       {/* Global Enclave Modals & HITL Gates */}
       <ApprovalCheckpoint />

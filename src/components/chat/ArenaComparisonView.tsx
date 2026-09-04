@@ -9,11 +9,11 @@ import { mockCorrosionDegradationCurve } from "@/mocks/mockInspectionData";
 
 export function ArenaComparisonView() {
   return (
-    <div className="flex-1 h-full overflow-y-auto p-6 max-w-6xl mx-auto space-y-6">
+    <div className="w-full flex-1 h-full min-h-0 overflow-y-auto p-6 max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-border-subtle">
         <div>
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-accent-safety" />
+            <Sparkles className="w-5 h-5 text-accent" />
             <h2 className="text-xl font-bold text-primary">
               Dual-Model Arena Evaluation Grid
             </h2>
@@ -30,7 +30,7 @@ export function ArenaComparisonView() {
         <Card className="p-5 bg-surface-card border-border-medium shadow-card space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
             <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-accent-safety" />
+              <Cpu className="w-4 h-4 text-accent" />
               <h3 className="text-xs font-bold text-primary font-mono">
                 Model A: Qwen 2.5 14B Industrial
               </h3>
@@ -40,7 +40,7 @@ export function ArenaComparisonView() {
             </span>
           </div>
 
-          <div className="prose-custom text-xs">
+          <div className="prose-claude text-xs">
             <p>
               <strong>Corrosion Degradation Assessment:</strong><br />
               Target: Hydrocracker Unit 3 Reactor Overhead (CML-HC-101A).<br />
@@ -72,7 +72,7 @@ export function ArenaComparisonView() {
             </span>
           </div>
 
-          <div className="prose-custom text-xs">
+          <div className="prose-claude text-xs">
             <p>
               <strong>Chain of Thought Reasoning:</strong><br />
               &lt;think&gt;<br />

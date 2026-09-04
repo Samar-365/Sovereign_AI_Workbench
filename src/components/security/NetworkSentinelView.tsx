@@ -38,7 +38,7 @@ export function NetworkSentinelView() {
   };
 
   return (
-    <div className="flex-1 h-full overflow-y-auto p-6 max-w-5xl mx-auto space-y-6">
+    <div className="w-full flex-1 h-full min-h-0 overflow-y-auto p-6 max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-subtle">
         <div>
@@ -126,7 +126,7 @@ export function NetworkSentinelView() {
 
         <Card className="p-4 bg-surface-card border-border-medium">
           <div className="flex items-center gap-2 text-primary-secondary text-xs mb-1">
-            <Activity className="w-4 h-4 text-accent-safety" />
+            <Activity className="w-4 h-4 text-accent" />
             <span>Total Egress Bytes</span>
           </div>
           <div className="text-base font-bold text-status-success font-mono">

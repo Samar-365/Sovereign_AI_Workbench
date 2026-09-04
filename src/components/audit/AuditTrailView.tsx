@@ -47,7 +47,7 @@ export function AuditTrailView() {
   };
 
   return (
-    <div className="flex-1 h-full overflow-y-auto p-6 max-w-6xl mx-auto space-y-6">
+    <div className="w-full flex-1 h-full min-h-0 overflow-y-auto p-6 max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-subtle">
         <div>
@@ -124,7 +124,7 @@ export function AuditTrailView() {
                     </div>
                   </td>
                   <td className="p-3.5 align-top">
-                    <div className="flex items-center gap-1.5 text-accent-safety">
+                    <div className="flex items-center gap-1.5 text-accent">
                       <span>{truncateHash(log.sha256Hash, 8, 8)}</span>
                       <button
                         onClick={() => handleCopyHash(log.id, log.sha256Hash)}

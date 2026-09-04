@@ -22,15 +22,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-safety disabled:pointer-events-none disabled:opacity-45 select-none";
+      "inline-flex items-center justify-center font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 disabled:pointer-events-none disabled:opacity-40 select-none cursor-pointer";
 
     const variants = {
       primary:
-        "bg-accent-safety text-white hover:bg-accent-hover active:bg-accent-pressed shadow-sm shadow-accent-safety/20 hover:shadow-glow",
+        "bg-accent text-white hover:bg-accent-hover active:bg-accent-pressed shadow-sm",
       secondary:
-        "bg-surface-raised text-primary hover:bg-surface-hover active:bg-surface-card border border-border-subtle",
+        "bg-surface-card text-primary hover:bg-surface-hover border border-border-subtle",
       outline:
-        "border border-border-medium bg-transparent text-primary hover:bg-surface-hover hover:border-border-focus text-primary",
+        "border border-border-medium bg-transparent text-primary hover:bg-surface-hover",
       ghost:
         "bg-transparent text-primary-secondary hover:text-primary hover:bg-surface-hover",
       danger:
@@ -38,10 +38,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizes = {
-      sm: "h-8 px-3 text-xs rounded-md gap-1.5",
+      sm: "h-8 px-3 text-[13px] rounded-lg gap-1.5",
       md: "h-9 px-4 text-sm rounded-lg gap-2",
-      lg: "h-11 px-5 text-base rounded-xl gap-2.5",
-      icon: "h-9 w-9 p-0 rounded-lg justify-center",
+      lg: "h-10 px-5 text-sm rounded-xl gap-2",
+      icon: "h-8 w-8 p-0 rounded-lg justify-center",
     };
 
     return (
@@ -53,7 +53,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && (
           <svg
-            className="animate-spin -ml-1 mr-2 h-4 w-4 text-current"
+            className="animate-spin -ml-1 mr-1.5 h-3.5 w-3.5 text-current"
             fill="none"
             viewBox="0 0 24 24"
           >

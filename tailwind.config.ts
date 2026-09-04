@@ -10,45 +10,55 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#09090B",
+        /* ── Claude Warm Parchment Canvas ── */
+        canvas: {
+          DEFAULT: "#2B2B26",    /* Dark mode main canvas */
+          light: "#FAF9F5",      /* Light mode warm ivory */
+        },
         surface: {
-          DEFAULT: "#111114",
-          card: "#16161B",
-          hover: "#1C1C22",
-          input: "#141418",
-          raised: "#18181C",
+          DEFAULT: "#302F2B",    /* Sidebar / secondary panels */
+          card: "#353430",       /* Elevated card surfaces */
+          hover: "#3D3C37",      /* Hovered interactive surfaces */
+          input: "#2F2E2A",      /* Composer / input fields */
+          raised: "#383733",     /* Raised panels */
+          light: "#F0EFEA",      /* Light mode sidebar */
         },
         border: {
-          subtle: "#222227",
-          medium: "#2D2D35",
-          focus: "#FF6A00",
+          subtle: "#3E3D38",     /* Primary dividers, subtle borders */
+          medium: "#4A4944",     /* Active borders, panels */
+          focus: "#D97757",      /* Focused input ring - terracotta */
+          light: "#E5E4DF",      /* Light mode borders */
         },
         primary: {
-          DEFAULT: "#F4F4F5",
-          secondary: "#A1A1AA",
-          muted: "#71717A",
+          DEFAULT: "#ECEBE6",    /* Primary text (warm white) */
+          secondary: "#A8A69E",  /* Secondary / muted text */
+          muted: "#706E6B",      /* Placeholders, disabled, faint */
         },
         accent: {
-          safety: "#FF6A00",
-          hover: "#FF8533",
-          pressed: "#D95900",
-          glow: "rgba(255, 106, 0, 0.12)",
+          DEFAULT: "#D97757",    /* Claude terracotta brand */
+          hover: "#E08868",      /* Terracotta hover */
+          pressed: "#C4654A",    /* Terracotta pressed */
+          glow: "rgba(217, 119, 87, 0.12)", /* Subtle warm glow */
         },
         status: {
-          success: "#10B981",
-          warning: "#F59E0B",
-          danger: "#EF4444",
-          info: "#3B82F6",
+          success: "#4DA37A",    /* Warm sage green */
+          warning: "#D4A843",    /* Warm amber */
+          danger: "#C9554D",     /* Warm coral red */
+          info: "#5B8ABF",       /* Muted blue */
         },
       },
       fontFamily: {
+        serif: [
+          "Georgia",
+          '"Times New Roman"',
+          "serif",
+        ],
         sans: [
+          "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
           "Roboto",
-          '"Helvetica Neue"',
-          "Arial",
           "sans-serif",
         ],
         mono: [
@@ -57,21 +67,23 @@ const config: Config = {
           "Menlo",
           "Monaco",
           "Consolas",
-          '"Liberation Mono"',
-          '"Courier New"',
           "monospace",
         ],
       },
+      fontSize: {
+        "body": ["0.9375rem", { lineHeight: "1.6" }],   /* 15px */
+        "sm-body": ["0.8125rem", { lineHeight: "1.5" }], /* 13px */
+        "caption": ["0.6875rem", { lineHeight: "1.4" }], /* 11px */
+      },
       boxShadow: {
-        glow: "0 0 25px rgba(255, 106, 0, 0.15)",
-        floating: "0 10px 30px -10px rgba(0, 0, 0, 0.6)",
-        card: "0 4px 20px -2px rgba(0, 0, 0, 0.5)",
+        glow: "0 0 20px rgba(217, 119, 87, 0.12)",
+        floating: "0 4px 24px -4px rgba(0, 0, 0, 0.25)",
+        card: "0 2px 12px -2px rgba(0, 0, 0, 0.15)",
+        composer: "0 -4px 30px -10px rgba(0, 0, 0, 0.3)",
       },
       borderRadius: {
         "2xl": "16px",
-      },
-      lineHeight: {
-        relaxed: "1.65",
+        "3xl": "24px",
       },
     },
   },

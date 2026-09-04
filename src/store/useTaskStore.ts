@@ -144,7 +144,7 @@ The localized ultrasonic inspection log was processed through our local multimod
       requiresApproval: false,
       approvalStatus: "approved",
       approvalDetails: {
-        approvedBy: "Tejas Rawool",
+        approvedBy: "Admin",
         approvedAt: "2026-09-04 18:42:15 UTC",
         signatureHash: "8f72a45b91e32049d5c181774fa1b203c81665a31b40974ef6f5367809a7b931",
         operatorRole: "Lead Corrosion Specialist",
@@ -277,7 +277,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   setActiveContextTab: (tab) => set({ activeContextTab: tab }),
 
   // Operator
-  operatorName: "Tejas Rawool",
+  operatorName: "Admin",
   operatorRole: "Lead Corrosion Specialist",
   setOperatorRole: (role) => set({ operatorRole: role }),
 

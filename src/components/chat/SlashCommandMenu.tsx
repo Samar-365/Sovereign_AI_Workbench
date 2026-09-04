@@ -82,13 +82,13 @@ export function SlashCommandMenu({
   if (filteredCommands.length === 0) return null;
 
   return (
-    <div className="absolute bottom-full left-0 mb-3 w-full max-w-lg rounded-2xl bg-surface-card border border-border-medium shadow-floating p-2 z-50 animate-in fade-in zoom-in-95">
-      <div className="px-3 py-1.5 border-b border-border-subtle flex items-center justify-between">
-        <span className="text-[11px] font-mono uppercase text-primary-muted font-bold">
-          Refinery SOP Macro Library (/)
+    <div className="absolute bottom-full left-0 mb-3 w-full max-w-lg rounded-2xl bg-surface-card border border-border-subtle shadow-floating p-1.5 z-50">
+      <div className="px-3 py-2 flex items-center justify-between">
+        <span className="text-[12px] font-medium text-primary-secondary">
+          Commands
         </span>
-        <span className="text-[10px] font-mono text-accent-safety">
-          Press Enter or Click to Insert
+        <span className="text-[10px] text-primary-muted">
+          Enter to insert
         </span>
       </div>
 
@@ -101,16 +101,16 @@ export function SlashCommandMenu({
               onClick={() => onSelect(cmd)}
               className="w-full p-2.5 rounded-xl text-left hover:bg-surface-hover flex items-start gap-3 transition-colors group"
             >
-              <div className="w-8 h-8 rounded-lg bg-accent-safety/10 border border-accent-safety/20 flex items-center justify-center text-accent-safety shrink-0 group-hover:bg-accent-safety group-hover:text-white transition-colors">
-                <Icon className="w-4 h-4" />
+              <div className="w-7 h-7 rounded-lg bg-accent/8 flex items-center justify-center text-accent shrink-0">
+                <Icon className="w-3.5 h-3.5" />
               </div>
               <div className="flex-1 overflow-hidden">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-accent-safety font-mono">
+                  <span className="text-[13px] font-medium text-primary">
                     {cmd.label}
                   </span>
                 </div>
-                <p className="text-[11px] text-primary-secondary truncate mt-0.5">
+                <p className="text-[11px] text-primary-muted truncate mt-0.5">
                   {cmd.description}
                 </p>
               </div>

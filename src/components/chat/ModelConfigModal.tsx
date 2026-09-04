@@ -87,7 +87,7 @@ export function ModelConfigModal() {
                 onClick={() => handleSetPreset(0.0)}
                 className={`px-2 py-0.5 rounded text-[10px] font-mono border transition-colors ${
                   temp === 0.0
-                    ? "bg-accent-safety text-white border-accent-safety"
+                    ? "bg-accent text-white border-accent"
                     : "bg-surface-card border-border-subtle text-primary-secondary hover:text-primary"
                 }`}
               >
@@ -98,7 +98,7 @@ export function ModelConfigModal() {
                 onClick={() => handleSetPreset(0.7)}
                 className={`px-2 py-0.5 rounded text-[10px] font-mono border transition-colors ${
                   temp === 0.7
-                    ? "bg-accent-safety text-white border-accent-safety"
+                    ? "bg-accent text-white border-accent"
                     : "bg-surface-card border-border-subtle text-primary-secondary hover:text-primary"
                 }`}
               >
@@ -114,7 +114,7 @@ export function ModelConfigModal() {
             step="0.05"
             value={temp}
             onChange={(e) => setTemp(parseFloat(e.target.value))}
-            className="w-full accent-accent-safety cursor-pointer"
+            className="w-full accent-accent cursor-pointer"
           />
 
           <div className="flex justify-between text-[10px] font-mono text-primary-muted">
@@ -137,7 +137,7 @@ export function ModelConfigModal() {
               step="0.05"
               value={topP}
               onChange={(e) => setTopP(parseFloat(e.target.value))}
-              className="w-full accent-accent-safety cursor-pointer"
+              className="w-full accent-accent cursor-pointer"
             />
           </div>
 
@@ -158,7 +158,7 @@ export function ModelConfigModal() {
         <div className="p-3.5 rounded-xl bg-surface border border-border-subtle flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-accent-safety" />
+              <Layers className="w-4 h-4 text-accent" />
               <span className="font-semibold text-primary">
                 Dual-Model Arena Comparison View
               </span>
@@ -171,7 +171,7 @@ export function ModelConfigModal() {
             type="button"
             onClick={() => setIsArenaMode(!isArenaMode)}
             className={`w-11 h-6 rounded-full transition-colors relative ${
-              isArenaMode ? "bg-accent-safety" : "bg-border-medium"
+              isArenaMode ? "bg-accent" : "bg-border-medium"
             }`}
           >
             <span

@@ -21,7 +21,7 @@ export function TagFilterPills({
         className={cn(
           "px-3 py-1 rounded-lg text-xs font-mono transition-colors",
           selectedTag === null
-            ? "bg-accent-safety text-white font-semibold"
+            ? "bg-accent text-white font-semibold"
             : "bg-surface-card border border-border-subtle text-primary-secondary hover:text-primary hover:bg-surface-hover"
         )}
       >
@@ -37,7 +37,7 @@ export function TagFilterPills({
             className={cn(
               "px-3 py-1 rounded-lg text-xs font-mono transition-colors",
               isSelected
-                ? "bg-accent-safety text-white font-semibold"
+                ? "bg-accent text-white font-semibold"
                 : "bg-surface-card border border-border-subtle text-primary-secondary hover:text-primary hover:bg-surface-hover"
             )}
           >

@@ -112,7 +112,7 @@ export function InteractivePipeline() {
                 onClick={() => setActiveStep(index)}
                 className={`p-3.5 rounded-xl border text-left transition-all duration-150 flex flex-col justify-between ${
                   isActive
-                    ? "bg-surface-raised border-accent-safety shadow-glow"
+                    ? "bg-surface-raised border-accent shadow-glow"
                     : "bg-surface-card border-border-subtle hover:border-border-medium hover:bg-surface-hover"
                 }`}
               >
@@ -120,7 +120,7 @@ export function InteractivePipeline() {
                   <div
                     className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
                       isActive
-                        ? "bg-accent-safety text-white"
+                        ? "bg-accent text-white"
                         : "bg-surface text-primary-muted"
                     }`}
                   >
@@ -147,14 +147,14 @@ export function InteractivePipeline() {
         <Card className="p-6 sm:p-8 bg-surface-card border-border-medium shadow-floating">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-border-subtle">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-accent-safety/10 border border-accent-safety/30 flex items-center justify-center text-accent-safety">
+              <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent">
                 {React.createElement(steps[activeStep].icon, {
                   className: "w-6 h-6",
                 })}
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-accent-safety font-semibold">
+                  <span className="text-xs font-mono text-accent font-semibold">
                     STAGE {steps[activeStep].id} OF 6
                   </span>
                   <Badge variant="outline">{steps[activeStep].node}</Badge>

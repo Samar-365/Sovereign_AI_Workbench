@@ -6,15 +6,11 @@ import {
   Activity,
   Award,
   Sparkles,
-  ShieldCheck,
-  Cpu,
-  Layers,
 } from "lucide-react";
 import { useTaskStore } from "@/store/useTaskStore";
 import { MessageBubble } from "./MessageBubble";
 import { Composer } from "./Composer";
 import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
 import { AttachedFile } from "@/types/chat";
 import { simulateAgentTraceStream } from "@/lib/sse";
 import { mockCorrosionDegradationCurve } from "@/mocks/mockInspectionData";
@@ -143,7 +139,7 @@ export function ChatContainer() {
   const quickPresets = [
     {
       title: "Hydrocracker UT Audit",
-      description: "Extract CML wall thickness, calculate corrosion rates (mm/yr) & API 570 MAWT limit.",
+      description: "Extract CML wall thickness, calculate corrosion rates & API 570 MAWT limit.",
       prompt:
         "Analyze the uploaded ultrasonic thickness inspection log for Hydrocracker Unit 3. Extract the nominal vs measured wall thickness at all Condition Monitoring Locations (CMLs), compute short-term and long-term corrosion rates, project remaining life, and check compliance against API 570 minimum retirement thickness (MAWT = 6.5 mm).",
       file: {
@@ -155,7 +151,7 @@ export function ChatContainer() {
       icon: FileScan,
     },
     {
-      title: "Pump Vibration FFT Anomaly",
+      title: "Pump Vibration FFT",
       description: "Analyze crude charge pump FFT spectrum for bearing wear and unbalance spikes.",
       prompt:
         "Evaluate pump P-102B FFT vibration spectrum for bearing wear, unbalance, and misalignment frequencies against ISO 10816 vibration severity limits.",
@@ -168,7 +164,7 @@ export function ChatContainer() {
       icon: Activity,
     },
     {
-      title: "OISD-105 Work Permit Check",
+      title: "OISD-105 Work Permit",
       description: "Verify confined space hot work permit against statutory OISD checklists.",
       prompt:
         "Verify the current hot work & confined space work permit against OISD-STD-105 standard operating checklists for atmospheric testing, blind isolation, and fire watch compliance.",
@@ -177,55 +173,48 @@ export function ChatContainer() {
   ];
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-canvas relative">
+    <div className="flex-1 flex flex-col h-full w-full min-h-0 overflow-hidden bg-canvas relative">
       {/* Scrollable Conversation Canvas */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-3xl mx-auto space-y-6">
           {messages.length === 0 ? (
-            /* Blank / Welcome Screen */
-            <div className="py-12 text-center select-none animate-in fade-in duration-300">
-              <div className="w-14 h-14 rounded-2xl bg-surface-card border border-border-medium flex items-center justify-center mx-auto mb-5 shadow-floating">
-                <Sparkles className="w-7 h-7 text-accent-safety" />
+            /* Claude-style Welcome Screen */
+            <div className="py-20 text-center select-none">
+              <div className="w-12 h-12 rounded-full bg-accent/12 flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="w-6 h-6 text-accent" />
               </div>
-              <h2 className="text-2xl font-bold text-primary">
-                Sovereign Operator Workspace
+              <h2 className="text-2xl font-semibold text-primary tracking-tight">
+                How can I help you today?
               </h2>
-              <p className="mt-2 text-sm text-primary-secondary max-w-lg mx-auto">
-                Air-gapped intelligence enclave with deterministic LangGraph reasoning, local vector RAG, and Human-in-the-Loop verification.
+              <p className="mt-2 text-[15px] text-primary-secondary max-w-md mx-auto leading-relaxed">
+                Air-gapped industrial AI with deterministic reasoning and human-in-the-loop verification.
               </p>
 
               {/* Quick Launch Presets */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 text-left">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-10 text-left">
                 {quickPresets.map((preset, idx) => {
                   const Icon = preset.icon;
                   return (
-                    <Card
+                    <button
                       key={idx}
-                      variant="interactive"
                       onClick={() =>
                         handleSendMessage(
                           preset.prompt,
                           preset.file ? [preset.file] : []
                         )
                       }
-                      className="p-4 flex flex-col justify-between"
+                      className="p-4 rounded-2xl border border-border-subtle bg-surface-card hover:bg-surface-hover hover:border-border-medium transition-all text-left group"
                     >
-                      <div>
-                        <div className="w-8 h-8 rounded-lg bg-accent-safety/10 border border-accent-safety/25 flex items-center justify-center text-accent-safety mb-3">
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <h4 className="text-xs font-bold text-primary mb-1">
-                          {preset.title}
-                        </h4>
-                        <p className="text-[11px] text-primary-secondary leading-relaxed">
-                          {preset.description}
-                        </p>
+                      <div className="w-8 h-8 rounded-xl bg-accent/8 flex items-center justify-center text-accent mb-3">
+                        <Icon className="w-4 h-4" />
                       </div>
-                      <div className="mt-3 pt-2 border-t border-border-subtle flex items-center justify-between text-[10px] font-mono text-accent-safety">
-                        <span>Click to Execute</span>
-                        <span>➔</span>
-                      </div>
-                    </Card>
+                      <h4 className="text-[13px] font-medium text-primary mb-1">
+                        {preset.title}
+                      </h4>
+                      <p className="text-[12px] text-primary-secondary leading-relaxed">
+                        {preset.description}
+                      </p>
+                    </button>
                   );
                 })}
               </div>
@@ -239,8 +228,8 @@ export function ChatContainer() {
         </div>
       </div>
 
-      {/* Floating Elevated Composer */}
-      <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-canvas via-canvas/90 to-transparent pt-4">
+      {/* Floating Composer with gradient fade */}
+      <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-canvas via-canvas/95 to-transparent pt-6">
         <Composer onSendMessage={handleSendMessage} />
       </div>
     </div>
