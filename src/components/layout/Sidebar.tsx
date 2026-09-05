@@ -69,6 +69,7 @@ export function Sidebar() {
     { view: "tasks", label: "Tasks", icon: MessageSquare },
     { view: "audit", label: "Audit Trail", icon: FileCheck },
     { view: "network", label: "Network", icon: ShieldCheck },
+    { view: "settings", label: "Settings", icon: Settings },
   ];
 
   return (

@@ -6,6 +6,7 @@ import { useTaskStore } from "@/store/useTaskStore";
 import { ChatContainer } from "@/components/chat/ChatContainer";
 import { AuditTrailView } from "@/components/audit/AuditTrailView";
 import { NetworkSentinelView } from "@/components/security/NetworkSentinelView";
+import { SettingsView } from "@/components/settings/SettingsView";
 import { ApprovalCheckpoint } from "@/components/approval/ApprovalCheckpoint";
 import { ModelConfigModal } from "@/components/chat/ModelConfigModal";
 import { ArenaComparisonView } from "@/components/chat/ArenaComparisonView";
@@ -25,6 +26,8 @@ export default function WorkbenchPage() {
         return <AuditTrailView />;
       case "network":
         return <NetworkSentinelView />;
+      case "settings":
+        return <SettingsView />;
       default:
         return <ChatContainer />;
     }

@@ -9,7 +9,15 @@ import { initialMockAuditLogs } from "@/mocks/mockAuditLogs";
 import { mockCorrosionDegradationCurve } from "@/mocks/mockInspectionData";
 import { generateSHA256 } from "@/lib/crypto";
 
-export type WorkspaceView = "tasks" | "audit" | "network";
+export type WorkspaceView = "tasks" | "audit" | "network" | "settings";
+
+export interface ConfiguredModel {
+  id: string;
+  name: string;
+  endpoint: string;
+  apiKey?: string;
+  provider: string;
+}
 
 interface TaskState {
   // Navigation & Shell
@@ -34,6 +42,11 @@ interface TaskState {
   setModelConfig: (config: Partial<ModelGenerationConfig>) => void;
   isModelModalOpen: boolean;
   setModelModalOpen: (open: boolean) => void;
+
+  // Configured Models
+  configuredModels: ConfiguredModel[];
+  addConfiguredModel: (model: Omit<ConfiguredModel, "id">) => void;
+  removeConfiguredModel: (id: string) => void;
 
   // Tasks & History
   tasks: TaskItem[];
@@ -297,6 +310,39 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     set((state) => ({ modelConfig: { ...state.modelConfig, ...config } })),
   isModelModalOpen: false,
   setModelModalOpen: (open) => set({ isModelModalOpen: open }),
+
+  // Configured Models
+  configuredModels: [
+    {
+      id: "model-1",
+      name: "Qwen 2.5 14B Industrial",
+      endpoint: "http://localhost:11434/v1",
+      provider: "Ollama (Local)",
+    },
+    {
+      id: "model-2",
+      name: "DeepSeek R1 14B Distill",
+      endpoint: "http://localhost:11434/v1",
+      provider: "Ollama (Local)",
+    },
+    {
+      id: "model-3",
+      name: "Llama 3.3 70B Industrial",
+      endpoint: "http://gpu-cluster:8000/v1",
+      provider: "VLLM (Multi-GPU)",
+    },
+  ],
+  addConfiguredModel: (model) =>
+    set((state) => ({
+      configuredModels: [
+        ...state.configuredModels,
+        { ...model, id: `model-${Date.now()}` },
+      ],
+    })),
+  removeConfiguredModel: (id) =>
+    set((state) => ({
+      configuredModels: state.configuredModels.filter((m) => m.id !== id),
+    })),
 
   // Tasks & History
   tasks: [initialTask],
