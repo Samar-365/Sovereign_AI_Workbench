@@ -76,7 +76,7 @@ export function Sidebar() {
     <aside className="w-[260px] h-full bg-surface flex flex-col justify-between shrink-0 select-none transition-sidebar">
       {/* Top Section */}
       <div className="p-3 flex flex-col gap-2">
-        {/* Sidebar Toggle + New Task Row */}
+        {/* Sidebar Toggle Row */}
         <div className="flex items-center justify-between px-1 mb-1">
           <button
             onClick={toggleSidebar}
@@ -85,29 +85,7 @@ export function Sidebar() {
           >
             <PanelLeftClose className="w-4 h-4" />
           </button>
-          <button
-            onClick={createNewTask}
-            className="p-1.5 rounded-lg text-primary-muted hover:text-primary hover:bg-surface-hover transition-colors"
-            title="New chat (Ctrl+N)"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
         </div>
-
-        {/* Prominent New Chat Action */}
-        <button
-          onClick={createNewTask}
-          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-[13px] bg-accent/10 hover:bg-accent/15 text-accent border border-accent/20 transition-all font-medium group shadow-xs cursor-pointer"
-          title="Start a new chat (Ctrl+N)"
-        >
-          <div className="flex items-center gap-2">
-            <Plus className="w-4 h-4 transition-transform group-hover:rotate-90 duration-200" />
-            <span>New Chat</span>
-          </div>
-          <span className="text-[10px] text-accent/80 font-mono bg-accent/10 px-1.5 py-0.5 rounded border border-accent/20">
-            Ctrl+N
-          </span>
-        </button>
 
         {/* View Navigation */}
         <div className="space-y-0.5">

@@ -9,7 +9,6 @@ import {
   Sparkles,
   FileText,
   FileCode,
-  Plus,
 } from "lucide-react";
 import { useTaskStore } from "@/store/useTaskStore";
 
@@ -20,7 +19,6 @@ export function Header() {
     isContextPanelOpen,
     toggleContextPanel,
     messages,
-    createNewTask,
   } = useTaskStore();
 
   const [isExportDropdownOpen, setIsExportDropdownOpen] = useState(false);
@@ -66,14 +64,6 @@ export function Header() {
           </button>
         )}
 
-        <button
-          onClick={createNewTask}
-          className="p-1.5 rounded-lg text-primary-muted hover:text-primary hover:bg-surface-hover transition-colors flex items-center gap-1.5"
-          title="New chat (Ctrl+N)"
-        >
-          <Plus className="w-4 h-4" />
-          <span className="text-xs font-medium hidden sm:inline">New Chat</span>
-        </button>
 
         <Link href="/" className="flex items-center gap-2 ml-1">
           <div className="w-7 h-7 rounded-full bg-accent/15 flex items-center justify-center">

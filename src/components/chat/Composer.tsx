@@ -8,7 +8,6 @@ import {
   ArrowUp,
   X,
   FileText,
-  Lock,
   Loader2,
 } from "lucide-react";
 import { useTaskStore } from "@/store/useTaskStore";
@@ -29,7 +28,7 @@ export function Composer({ onSendMessage }: ComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { isExecuting, modelConfig } = useTaskStore();
+  const { isExecuting } = useTaskStore();
 
   // Auto-expand textarea
   useEffect(() => {
@@ -221,16 +220,6 @@ export function Composer({ onSendMessage }: ComposerProps) {
               )}
             </button>
 
-            {/* Model + security badge */}
-            <div className="hidden sm:flex items-center gap-1.5 ml-1.5 pl-2 border-l border-border-subtle">
-              <span className="text-[11px] text-primary-muted px-1.5 py-0.5 rounded-md bg-surface border border-border-subtle">
-                {modelConfig.selectedModel.split(" ")[0]} 2.5
-              </span>
-              <div className="flex items-center gap-1 text-[11px] text-status-success px-1.5 py-0.5 rounded-md bg-status-success/8 border border-status-success/15">
-                <Lock className="w-2.5 h-2.5" />
-                <span>Secure</span>
-              </div>
-            </div>
           </div>
 
           {/* Right: Send Button (Claude-style circle arrow) */}
