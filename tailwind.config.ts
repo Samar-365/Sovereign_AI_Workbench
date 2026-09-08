@@ -17,10 +17,10 @@ const config: Config = {
         },
         surface: {
           DEFAULT: "#302F2B",    /* Sidebar / secondary panels */
-          card: "#353430",       /* Elevated card surfaces */
-          hover: "#3D3C37",      /* Hovered interactive surfaces */
+          card: "rgba(7, 27, 38, 0.75)",       /* Elevated card surfaces */
+          hover: "rgba(7, 27, 38, 0.85)",      /* Hovered interactive surfaces */
           input: "#2F2E2A",      /* Composer / input fields */
-          raised: "#383733",     /* Raised panels */
+          raised: "rgba(7, 27, 38, 0.85)",     /* Raised panels */
           light: "#F0EFEA",      /* Light mode sidebar */
         },
         border: {
