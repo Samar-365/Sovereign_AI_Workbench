@@ -12,7 +12,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-canvas text-primary">
       {/* Clean Navigation Header */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-canvas/80 backdrop-blur-xl border-b border-border-subtle h-14 px-4 flex items-center select-none">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#071B26]/95 backdrop-blur-xl border-b border-[#071B26] h-14 px-4 sm:px-6 flex items-center select-none shadow-sm">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-accent/15 flex items-center justify-center">
             <Sparkles className="w-3.5 h-3.5 text-accent" />

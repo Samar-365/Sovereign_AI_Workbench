@@ -6,8 +6,8 @@
   /* ── Claude Dark Mode Warm Parchment Palette ── */
   --color-bg-canvas: #2B2B26;
   --color-bg-surface: #302F2B;
-  --color-bg-card: #353430;
-  --color-bg-card-hover: #3D3C37;
+  --color-bg-card: rgba(7, 27, 38, 0.75);
+  --color-bg-card-hover: rgba(7, 27, 38, 0.85);
   --color-bg-input: #2F2E2A;
   --color-border-subtle: #3E3D38;
   --color-border-medium: #4A4944;

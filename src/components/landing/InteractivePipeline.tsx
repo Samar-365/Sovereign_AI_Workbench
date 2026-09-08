@@ -87,8 +87,25 @@ export function InteractivePipeline() {
   ];
 
   return (
-    <section id="pipeline" className="py-20 border-t border-border-subtle bg-surface/20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="pipeline" className="relative py-20 border-t border-border-subtle bg-surface/20 overflow-hidden">
+      {/* Cinematic GPU/Data-Center Corridor Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-no-repeat bg-[center_center] pointer-events-none"
+        style={{
+          backgroundImage: "url('/img/hero3.png')",
+        }}
+      />
+
+      {/* Dark navy overlay/gradient - lightened so GPU corridor and sunset view are clearly visible */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(5, 12, 22, 0.58) 0%, rgba(5, 12, 22, 0.40) 50%, rgba(5, 12, 22, 0.68) 100%)",
+        }}
+      />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <Badge variant="accent" className="mb-3">
             LANGGRAPH 6-NODE ORCHESTRATION
@@ -112,8 +129,8 @@ export function InteractivePipeline() {
                 onClick={() => setActiveStep(index)}
                 className={`p-3.5 rounded-xl border text-left transition-all duration-150 flex flex-col justify-between ${
                   isActive
-                    ? "bg-surface-raised border-accent shadow-glow"
-                    : "bg-surface-card border-border-subtle hover:border-border-medium hover:bg-surface-hover"
+                    ? "bg-[#071B26] border-accent shadow-glow"
+                    : "bg-[#071B26]/75 backdrop-blur-md border-[#071B26]/60 hover:border-border-medium hover:bg-[#071B26]/85"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -121,7 +138,7 @@ export function InteractivePipeline() {
                     className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
                       isActive
                         ? "bg-accent text-white"
-                        : "bg-surface text-primary-muted"
+                        : "bg-[#071B26]/60 text-primary-muted"
                     }`}
                   >
                     {step.id}
@@ -144,7 +161,7 @@ export function InteractivePipeline() {
         </div>
 
         {/* Active Step Deep Dive Card */}
-        <Card className="p-6 sm:p-8 bg-surface-card border-border-medium shadow-floating">
+        <Card className="p-6 sm:p-8 bg-[#071B26]/75 backdrop-blur-md border-[#071B26]/60 shadow-floating">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-border-subtle">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent">
@@ -178,7 +195,7 @@ export function InteractivePipeline() {
                 {steps[activeStep].details}
               </p>
             </div>
-            <div className="p-4 rounded-xl bg-surface border border-border-subtle">
+            <div className="p-4 rounded-xl bg-[#071B26]/60 backdrop-blur-md border border-[#071B26]/40">
               <h4 className="text-xs font-semibold text-primary-secondary uppercase tracking-wider mb-2">
                 Enclave Engine Stack
               </h4>

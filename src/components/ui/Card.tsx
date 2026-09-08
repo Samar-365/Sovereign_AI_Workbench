@@ -12,11 +12,11 @@ export function Card({
   ...props
 }: CardProps) {
   const variants = {
-    default: "bg-surface-card border border-border-subtle rounded-xl",
-    elevated: "bg-surface-raised border border-border-medium shadow-floating rounded-xl",
+    default: "bg-[#071B26]/75 backdrop-blur-md border border-[#071B26]/60 rounded-xl",
+    elevated: "bg-[#071B26]/75 backdrop-blur-md border border-[#071B26]/70 shadow-floating rounded-xl",
     interactive:
-      "bg-surface-card border border-border-subtle hover:border-border-medium hover:bg-surface-hover transition-all duration-150 cursor-pointer rounded-xl",
-    flat: "bg-surface border border-border-subtle rounded-xl",
+      "bg-[#071B26]/75 backdrop-blur-md border border-[#071B26]/60 hover:border-accent/40 hover:bg-[#071B26]/85 transition-all duration-150 cursor-pointer rounded-xl",
+    flat: "bg-[#071B26]/60 backdrop-blur-md border border-[#071B26]/40 rounded-xl",
   };
 
   return (

@@ -58,7 +58,7 @@ export function ComplianceShowcase() {
           {complianceStandards.map((item, index) => {
             const Icon = item.icon;
             return (
-              <Card key={index} className="p-6 bg-surface-card border-border-medium flex items-start gap-4">
+              <Card key={index} className="p-6 bg-[#071B26]/75 backdrop-blur-md border-[#071B26]/60 flex items-start gap-4">
                 <div className="w-10 h-10 rounded-xl bg-status-success/10 border border-status-success/25 flex items-center justify-center text-status-success shrink-0 mt-1">
                   <Icon className="w-5 h-5" />
                 </div>
