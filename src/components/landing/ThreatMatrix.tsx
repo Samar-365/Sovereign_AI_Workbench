@@ -86,7 +86,7 @@ export function ThreatMatrix() {
                   <th className="p-4 sm:p-5 text-xs font-semibold text-status-success uppercase tracking-wider w-[37.5%]">
                     <div className="flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4" />
-                      OnPremisAI Sovereign Enclave
+                      ABHEDYA AI Sovereign Enclave
                     </div>
                   </th>
                 </tr>
